@@ -1,4 +1,4 @@
-package com.devsuperior.aula.resources;
+package com.devsuperior.aula.resources.handlers;
 
 import com.devsuperior.aula.resources.exceptions.StandardError;
 import com.devsuperior.aula.services.exceptions.EntityNotFoundException;
