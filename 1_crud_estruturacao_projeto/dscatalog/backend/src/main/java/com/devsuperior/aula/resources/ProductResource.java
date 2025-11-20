@@ -1,8 +1,6 @@
 package com.devsuperior.aula.resources;
 
-import com.devsuperior.aula.dto.CategoryDTO;
 import com.devsuperior.aula.dto.ProductDTO;
-import com.devsuperior.aula.entities.Product;
 import com.devsuperior.aula.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,13 +1,11 @@
 package com.devsuperior.aula.resources;
 
 import com.devsuperior.aula.dto.CategoryDTO;
-import com.devsuperior.aula.entities.Category;
 import com.devsuperior.aula.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

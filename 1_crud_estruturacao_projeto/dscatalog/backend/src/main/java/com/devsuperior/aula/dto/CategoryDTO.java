@@ -1,7 +1,6 @@
 package com.devsuperior.aula.dto;
 
 import com.devsuperior.aula.entities.Category;
-import com.devsuperior.aula.repositories.CategoryRepository;
 
 public class CategoryDTO {
 
