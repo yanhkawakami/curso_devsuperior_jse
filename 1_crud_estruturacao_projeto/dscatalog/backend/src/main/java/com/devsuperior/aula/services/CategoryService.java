@@ -3,10 +3,15 @@ package com.devsuperior.aula.services;
 import com.devsuperior.aula.dto.CategoryDTO;
 import com.devsuperior.aula.entities.Category;
 import com.devsuperior.aula.repositories.CategoryRepository;
+import com.devsuperior.aula.services.exceptions.DatabaseException;
 import com.devsuperior.aula.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,9 +25,9 @@ public class CategoryService {
     CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDTO> findAll(){
-        List<Category> categories = repository.findAll();
-        return categories.stream().map(CategoryDTO::new).toList();
+    public Page<CategoryDTO> findAll(Pageable pageable){
+        Page<Category> categories = repository.findAll(pageable);
+        return categories.map(CategoryDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -52,7 +57,21 @@ public class CategoryService {
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Categoria com id " + id + " não encontrada!");
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial do banco de dados");
+        }
+    }
+
     public void copyDtoToEntity(Category category, CategoryDTO dto) {
         category.setName(dto.getName());
     }
+
+
 }
