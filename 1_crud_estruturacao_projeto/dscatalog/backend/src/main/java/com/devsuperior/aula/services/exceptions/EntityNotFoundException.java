@@ -1,4 +1,7 @@
 package com.devsuperior.aula.services.exceptions;
 
-public class EntityNotFoundException {
+public class EntityNotFoundException extends RuntimeException{
+    public EntityNotFoundException(String msg) {
+        super(msg);
+    }
 }
