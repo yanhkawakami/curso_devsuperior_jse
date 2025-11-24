@@ -33,13 +33,13 @@ public class Account {
     }
 
     public void withdraw(Double amount) {
-        if (amount < balance){
+        if (amount > balance){
             throw new IllegalArgumentException("Insufficient balance");
         }
         balance -= amount;
     }
 
-    public Double fullWithdraw(Double amount) {
+    public Double fullWithdraw() {
         double aux = balance;
         balance = 0.0;
         return aux;
