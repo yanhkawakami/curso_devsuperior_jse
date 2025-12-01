@@ -4,6 +4,7 @@ import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.factory.ProductFactory;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -17,12 +18,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @WebMvcTest(ProductResource.class)
 public class ProductResourceTests {
@@ -33,10 +36,14 @@ public class ProductResourceTests {
     @MockitoBean
     ProductService service;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     private PageImpl<ProductDTO> page;
     private ProductDTO productDto;
     private Long existingId;
     private Long nonExistingId;
+    private String jsonBody;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -44,10 +51,15 @@ public class ProductResourceTests {
         page = new PageImpl<>(List.of(productDto));
         existingId = 1L;
         nonExistingId = 2L;
+        jsonBody = objectMapper.writeValueAsString(productDto);
 
         Mockito.when(service.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(page);
+
         Mockito.when(service.findById(existingId)).thenReturn(productDto);
         Mockito.when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
+
+        Mockito.when(service.put(ArgumentMatchers.eq(existingId), ArgumentMatchers.any(ProductDTO.class))).thenReturn(productDto);
+        Mockito.when(service.put(ArgumentMatchers.eq(nonExistingId), ArgumentMatchers.any(ProductDTO.class))).thenThrow(ResourceNotFoundException.class);
     }
 
     @Test
@@ -75,6 +87,35 @@ public class ProductResourceTests {
     public void findByIdShouldReturnNotFoundWhenDoesNotIdExists() throws Exception {
         ResultActions result =
                 mockMvc.perform(get("/products/{id}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.id").doesNotExist());
+        result.andExpect(jsonPath("$.name").doesNotExist());
+        result.andExpect(jsonPath("$.description").doesNotExist());
+    }
+
+    @Test
+    public void putShouldReturnProductWhenIdExists() throws Exception {
+
+        ResultActions result =
+                mockMvc.perform(put("/products/{id}", existingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+    }
+
+    @Test
+    public void putShouldReturnNotFoundWhenDoesNotIdExists() throws Exception {
+        ResultActions result =
+                mockMvc.perform(put("/products/{id}", nonExistingId, productDto)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isNotFound());
