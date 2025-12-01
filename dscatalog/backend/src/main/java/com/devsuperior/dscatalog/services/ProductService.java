@@ -4,6 +4,7 @@ import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Optional;
 
 
 @Service
@@ -25,10 +27,20 @@ public class ProductService {
     @Autowired
     ProductRepository repository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable){
         Page<Product> products = repository.findAll(pageable);
         return products.map(ProductDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDTO findById(Long id){
+        Optional<Product> obj = repository.findById(id);
+        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        return new ProductDTO(entity);
     }
 
     @Transactional
@@ -62,7 +74,6 @@ public class ProductService {
         }
     }
 
-
     public void copyDtoToEntity(Product entity, ProductDTO dto) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
@@ -70,7 +81,8 @@ public class ProductService {
         entity.setImgUrl(dto.getImgUrl());
         entity.getCategories().clear();
         for (CategoryDTO categoryDto : dto.getCategories()){
-            entity.addCategory(new Category(categoryDto.getId(), categoryDto.getName()));
+            Category category = categoryRepository.getReferenceById(categoryDto.getId());
+            entity.addCategory(category);
         }
         entity.setDate(Instant.now());
     }

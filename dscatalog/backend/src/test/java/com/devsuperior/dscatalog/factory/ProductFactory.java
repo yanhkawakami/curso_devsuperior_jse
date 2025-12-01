@@ -11,7 +11,7 @@ public class ProductFactory {
 
     public static Product createProduct() {
         Product product = new Product(1L, "Phone", "Good Phone", 800.0, "https://fakeurl.com", Instant.now());
-        product.addCategory(new Category(2L, "Electronics"));
+        product.addCategory(new Category(1L, "Livros"));
         return product;
     }
 
