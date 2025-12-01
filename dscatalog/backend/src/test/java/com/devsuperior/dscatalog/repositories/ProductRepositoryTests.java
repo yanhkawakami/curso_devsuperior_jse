@@ -36,7 +36,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void saveShouldPersistsWithAutoIncrementWhenIdIsNull() {
-        Product product = ProductFactory.createdProduct();
+        Product product = ProductFactory.createProduct();
         product.setId(null);
         repository.save(product);
 
