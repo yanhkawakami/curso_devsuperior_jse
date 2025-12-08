@@ -1,0 +1,82 @@
+package com.devsuperior.dscatalog.services;
+
+import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.repositories.ProductRepository;
+import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+
+@SpringBootTest
+@Transactional // Com essa notação, a cada teste, acontece o rollback no banco, então os testes não são dependentes um do outro
+public class ProducServiceIntegrationTest {
+
+    @Autowired
+    private ProductService service;
+
+    @Autowired
+    private ProductRepository repository;
+
+    private Long existingId;
+    private Long nonExistingId;
+    private Long countTotalProducts;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        existingId = 1L;
+        nonExistingId = 1000L;
+        countTotalProducts = 25L;
+    }
+
+    @Test
+    public void deleteShouldDeleteResourceWhenIdExists() {
+        service.delete(existingId);
+        assert repository.count() == countTotalProducts - 1;
+        assert !repository.existsById(existingId);
+    }
+
+    @Test
+    public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.delete(nonExistingId);
+        });
+    }
+
+    @Test
+    public void findAllShouldReturnPageWhenPageZeroAndSizeTen() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<ProductDTO> result = service.findAll(pageRequest);
+
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(0, result.getNumber());
+        Assertions.assertEquals(10, result.getSize());
+        Assertions.assertEquals(countTotalProducts, result.getTotalElements());
+
+    }
+
+    @Test
+    public void findAllShouldReturnEmptyPageWhenPageDoesNotExist() {
+        PageRequest pageRequest = PageRequest.of(50, 10);
+        Page<ProductDTO> result = service.findAll(pageRequest);
+
+            Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findAllShouldReturnSortedPageWhenSortByName() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
+        Page<ProductDTO> result = service.findAll(pageRequest);
+
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals("Macbook Pro", result.getContent().get(0).getName());
+        Assertions.assertEquals("PC Gamer", result.getContent().get(1).getName());
+        Assertions.assertEquals("PC Gamer Alfa", result.getContent().get(2).getName());
+    }
+
+}

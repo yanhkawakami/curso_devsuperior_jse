@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.resources;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.factory.ProductFactory;
 import com.devsuperior.dscatalog.services.ProductService;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +21,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @WebMvcTest(ProductResource.class)
 public class ProductResourceTests {
@@ -41,6 +41,7 @@ public class ProductResourceTests {
     private ProductDTO productDto;
     private Long existingId;
     private Long nonExistingId;
+    private Long dependentId;
     private String jsonBody;
 
     @BeforeEach
@@ -49,6 +50,7 @@ public class ProductResourceTests {
         page = new PageImpl<>(List.of(productDto));
         existingId = 1L;
         nonExistingId = 2L;
+        dependentId = 3L;
         jsonBody = objectMapper.writeValueAsString(productDto);
 
         Mockito.when(service.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(page);
@@ -58,6 +60,12 @@ public class ProductResourceTests {
 
         Mockito.when(service.put(ArgumentMatchers.eq(existingId), ArgumentMatchers.any(ProductDTO.class))).thenReturn(productDto);
         Mockito.when(service.put(ArgumentMatchers.eq(nonExistingId), ArgumentMatchers.any(ProductDTO.class))).thenThrow(ResourceNotFoundException.class);
+
+        Mockito.doNothing().when(service).delete(existingId);
+        Mockito.doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+        Mockito.doThrow(DatabaseException.class).when(service).delete(dependentId);
+
+        Mockito.when(service.insert(ArgumentMatchers.any(ProductDTO.class))).thenReturn(productDto);
     }
 
     @Test
@@ -95,7 +103,6 @@ public class ProductResourceTests {
 
     @Test
     public void putShouldReturnProductWhenIdExists() throws Exception {
-
         ResultActions result =
                 mockMvc.perform(put("/products/{id}", existingId)
                         .content(jsonBody)
@@ -121,4 +128,40 @@ public class ProductResourceTests {
         result.andExpect(jsonPath("$.name").doesNotExist());
         result.andExpect(jsonPath("$.description").doesNotExist());
     }
+
+    @Test
+    public void insertShouldCreateAndReturnProductDto() throws Exception {
+        ResultActions result =
+                mockMvc.perform(post("/products", productDto)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isCreated());
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+    }
+
+    @Test
+    public void deleteShouldDeleteExistingId() throws Exception {
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", existingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldThrowNotFoundExceptionWhenIdDoesNotExist() throws Exception {
+        ResultActions result =
+                mockMvc.perform(delete("/products/{id}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.id").doesNotExist());
+        result.andExpect(jsonPath("$.name").doesNotExist());
+        result.andExpect(jsonPath("$.description").doesNotExist());
+    }
+
 }
