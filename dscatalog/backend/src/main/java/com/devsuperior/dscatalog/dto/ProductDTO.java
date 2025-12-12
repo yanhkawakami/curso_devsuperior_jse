@@ -1,6 +1,10 @@
 package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -11,10 +15,15 @@ import java.util.stream.Collectors;
 public class ProductDTO implements Serializable {
     private static final long serialVersionUID = 1;
     private Long id;
+    @Size(min = 5, max = 60)
+    @NotBlank (message = "Campo obrigatório")
     private String name;
+    @NotBlank (message = "Campo obrigatório")
     private String description;
+    @Positive (message = "Preço tem que ser um valor positivo")
     private Double price;
     private String imgUrl;
+    @PastOrPresent (message = "A data não pode ser futura")
     private Instant date;
 
     private Set<CategoryDTO> categories = new HashSet<>();
