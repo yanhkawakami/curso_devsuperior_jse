@@ -1,0 +1,26 @@
+meta {
+  name: New Category
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{host}}/categories
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.6.2
+}
+
+body:json {
+  {
+  	"name": "Roupas"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

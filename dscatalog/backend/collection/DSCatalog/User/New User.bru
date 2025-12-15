@@ -1,0 +1,38 @@
+meta {
+  name: New User
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.6.2
+}
+
+body:json {
+  {
+  	"firstName": "Bob",
+  	"lastName": "Brown",
+  	"email": "bob@gmail.com",
+  	"password": "bob123",
+  	"roles": [
+  		{
+  			"id": 1
+  		},
+  		{
+  			"id": 2
+  		}
+  	]
+  	
+  }
+}
+
+settings {
+  encodeUrl: true
+}

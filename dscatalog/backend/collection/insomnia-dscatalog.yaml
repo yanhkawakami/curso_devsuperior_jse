@@ -1,0 +1,431 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: DSCatalog
+meta:
+  id: wrk_4ae1f2529f924fff9190f520a63bd858
+  created: 1765830900575
+  modified: 1765830900575
+  description: ""
+collection:
+  - name: Category
+    meta:
+      id: fld_c728da77d0ff44939be39defcaac3fb0
+      created: 1763585042745
+      modified: 1765830912948
+      sortKey: -1763585042745
+      description: ""
+    children:
+      - url: "{{ _.host }}/categories"
+        name: Find All Categories
+        meta:
+          id: req_0431dcd5027945eea5141c34f63fba6f
+          created: 1763585036441
+          modified: 1763669243640
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047494
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/categories/10"
+        name: Find Category By Id
+        meta:
+          id: req_db6377150566405b9266a92ae5ce94a2
+          created: 1763585339226
+          modified: 1763642869799
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047444
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/categories"
+        name: New Category
+        meta:
+          id: req_faedc6012be840c6974dabc43cecfeef
+          created: 1763643280438
+          modified: 1763643306634
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047469
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Roupas"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/categories/4"
+        name: Update  Category
+        meta:
+          id: req_e2fc1edac5d14ef9a1f1f4900a6b6154
+          created: 1763643841231
+          modified: 1763643866338
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047456.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Jardinagem"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/categories/1"
+        name: Delete Category
+        meta:
+          id: req_458024ee49ad463281c2ec21f3f53ee9
+          created: 1763644582898
+          modified: 1765401595816
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047450.25
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Products
+    meta:
+      id: fld_39d3511887fa42f885036817c4f0189d
+      created: 1763648377294
+      modified: 1765830926203
+      sortKey: -1763585042695
+      description: ""
+    children:
+      - url: "{{ _.host }}/products?page=1"
+        name: Find All Products
+        meta:
+          id: req_878ebf9bf45344238d95ad4f69e740c3
+          created: 1763648377295
+          modified: 1763669618730
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047494
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/products"
+        name: New Product
+        meta:
+          id: req_53259dfffb444759b08bd6fe0546a94e
+          created: 1763648377296
+          modified: 1763669614764
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047469
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"name": "iPhone 16 Pro",
+            	"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            	"price": 1200,
+            	"imgUrl": "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/26-big.jpg",
+            	"categories": [
+            		{
+            			"id": 2,
+            			"name": "Eletrônicos"
+            		},
+            		{
+            			"id": 3,
+            			"name": "Computadores"
+            		}
+            	]
+
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/products/26"
+        name: Delete Product
+        meta:
+          id: req_33a398cc0cdb4ee997207f1734adf491
+          created: 1763648377297
+          modified: 1763669688504
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047450.25
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/products/26"
+        name: Update  Product
+        meta:
+          id: req_e2c7774b478544219bddf0ed392390c4
+          created: 1763648377297
+          modified: 1763669679083
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047456.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"name": "iPhone 16 Pro",
+            	"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            	"price": 1400,
+            	"imgUrl": "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/26-big.jpg",
+            	"categories": [
+            		{
+            			"id": 2,
+            			"name": "Eletrônicos"
+            		}
+            	]
+
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: User
+    meta:
+      id: fld_d7e9b7ae4b9340f6a78504d6b15dbceb
+      created: 1765570291710
+      modified: 1765830935588
+      sortKey: -1763585042645
+      description: ""
+    children:
+      - url: "{{ _.host }}/users?page=0&sort=lastName"
+        name: Find All Users
+        meta:
+          id: req_2a915e7d96dc4ec184f9740e795c964f
+          created: 1765570291711
+          modified: 1765570556078
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047494
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/users"
+        name: New User
+        meta:
+          id: req_86d77678fed44db4a25530950f858f0e
+          created: 1765570291711
+          modified: 1765570878726
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047469
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"firstName": "Bob",
+            	"lastName": "Brown",
+            	"email": "bob@gmail.com",
+            	"password": "bob123",
+            	"roles": [
+            		{
+            			"id": 1
+            		},
+            		{
+            			"id": 2
+            		}
+            	]
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/users/1"
+        name: Delete User
+        meta:
+          id: req_55c0593361eb4acd95993549813c4493
+          created: 1765570291712
+          modified: 1765571003953
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047450.25
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.host }}/users/26"
+        name: Update User
+        meta:
+          id: req_986351ea83f642af972b496d76b3a367
+          created: 1765570291712
+          modified: 1765570315197
+          isPrivate: false
+          description: ""
+          sortKey: -1763585047456.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"name": "iPhone 16 Pro",
+            	"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            	"price": 1400,
+            	"imgUrl": "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/26-big.jpg",
+            	"categories": [
+            		{
+            			"id": 2,
+            			"name": "Eletrônicos"
+            		}
+            	]
+
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_89101d2ae6a61c98ede9cd8436fd7cee014efdab
+    created: 1765830900577
+    modified: 1765830900577
+environments:
+  name: Base Environment
+  meta:
+    id: env_89101d2ae6a61c98ede9cd8436fd7cee014efdab
+    created: 1765830900577
+    modified: 1765830900577
+    isPrivate: false

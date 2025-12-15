@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "DSCatalog",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
