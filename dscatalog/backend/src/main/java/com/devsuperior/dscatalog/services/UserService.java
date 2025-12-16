@@ -1,9 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
-import com.devsuperior.dscatalog.dto.CategoryDTO;
-import com.devsuperior.dscatalog.dto.RoleDTO;
-import com.devsuperior.dscatalog.dto.UserDTO;
-import com.devsuperior.dscatalog.dto.UserInsertDTO;
+import com.devsuperior.dscatalog.dto.*;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Role;
 import com.devsuperior.dscatalog.entities.User;
@@ -62,11 +59,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO put(Long id, UserDTO dto) {
+    public UserDTO put(Long id, UserUpdateDTO dto) {
         try {
             User entity = repository.getReferenceById(id);
-            entity = repository.save(entity);
             copyDtoToEntity(entity, dto);
+            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+            entity = repository.save(entity);
             return new UserDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Usuário com id " + id + " não encontrado!");
@@ -85,7 +83,6 @@ public class UserService {
     }
 
     public void copyDtoToEntity(User entity, UserDTO dto) {
-        entity.setId(dto.getId());
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
         entity.setEmail(dto.getEmail());
