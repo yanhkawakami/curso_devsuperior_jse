@@ -15,7 +15,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/products")
-public class ProductResource {
+public class  ProductResource {
 
     @Autowired
     ProductService service;
