@@ -1,0 +1,25 @@
+meta {
+  name: New product (admin only)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{rshost}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+      "name": "Tablet"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

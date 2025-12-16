@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Oauth2 JWT password",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

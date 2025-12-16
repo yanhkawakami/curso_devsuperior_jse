@@ -1,0 +1,15 @@
+meta {
+  name: All products (public)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{rshost}}/products
+  body: none
+  auth: none
+}
+
+settings {
+  encodeUrl: true
+}
