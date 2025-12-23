@@ -1,5 +1,5 @@
-INSERT INTO tb_user (name, email, password) VALUES ('Alex', 'alex@gmail.com', '123456');
-INSERT INTO tb_user (name, email, password) VALUES ('Maria', 'maria@gmail.com', '123456');
+INSERT INTO tb_user (name, email, password) VALUES ('Alex', 'alex@gmail.com', '$2a$12$QO5lOAmq5qTAd5Pc6dKYsuntOaBB2rHIjewM/E2qG11S0yIcDstyS');
+INSERT INTO tb_user (name, email, password) VALUES ('Maria', 'maria@gmail.com', '$2a$12$WKJ8dBo8A8KnykuAnGQZu.p0sm3U4rmOACXnaL65bUgU/6Vpjbqam');
 
 INSERT INTO tb_product (name) VALUES ('TV');
 INSERT INTO tb_product (name) VALUES ('Computer');
