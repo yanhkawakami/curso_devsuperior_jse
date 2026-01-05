@@ -1,0 +1,21 @@
+meta {
+  name: Products paged
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/products?page=0&size=12&sort=name,asc
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 0
+  size: 12
+  sort: name,asc
+}
+
+settings {
+  encodeUrl: true
+}

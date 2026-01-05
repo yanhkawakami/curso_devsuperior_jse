@@ -1,11 +1,11 @@
 meta {
-  name: New category
+  name: Update category
   type: http
-  seq: 3
+  seq: 4
 }
 
-post {
-  url: {{host}}/categories
+put {
+  url: {{host}}/categories/1
   body: json
   auth: bearer
 }
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-      "name" : "Garden"
+      "name" : "New name"
   }
 }
 

@@ -1,11 +1,11 @@
 meta {
-  name: Delete category
+  name: User by id
   type: http
-  seq: 5
+  seq: 2
 }
 
-delete {
-  url: {{host}}/categories/4
+get {
+  url: {{host}}/users/1
   body: none
   auth: bearer
 }

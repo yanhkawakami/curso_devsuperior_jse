@@ -1,34 +1,33 @@
 meta {
-  name: Update User
+  name: Update user
   type: http
   seq: 4
 }
 
 put {
-  url: {{host}}/users/26
+  url: {{host}}/users/1
   body: json
-  auth: none
+  auth: bearer
 }
 
-headers {
-  Content-Type: application/json
-  User-Agent: insomnia/11.6.2
+auth:bearer {
+  token: {{token}}
 }
 
 body:json {
   {
-  	"name": "iPhone 16 Pro",
-  	"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  	"price": 1400,
-  	"imgUrl": "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/26-big.jpg",
-  	"categories": [
-  		{
-  			"id": 2,
-  			"name": "Eletrônicos"
-  		}
-  	]
-  
-  	
+    "firstName": "Bob",
+    "lastName": "Brown",
+    "email": "bob@gmail.com",
+    "password": "bob123",
+    "roles": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
   }
 }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -19,13 +20,13 @@ public class CategoryResource {
     CategoryService service;
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable){
-        Page<CategoryDTO> result = service.findAll(pageable);
+    public ResponseEntity<List<CategoryDTO>> findAll(){
+        List<CategoryDTO> result = service.findAll();
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CategoryDTO> findAll(@PathVariable Long id){
+    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
         CategoryDTO result = service.findById(id);
         return ResponseEntity.ok().body(result);
     }

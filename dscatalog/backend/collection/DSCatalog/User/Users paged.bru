@@ -1,0 +1,25 @@
+meta {
+  name: Users paged
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/users?page=0&size=12&sort=firstName
+  body: none
+  auth: bearer
+}
+
+params:query {
+  page: 0
+  size: 12
+  sort: firstName
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,18 +1,17 @@
 meta {
-  name: Delete User
+  name: Delete user
   type: http
-  seq: 3
+  seq: 5
 }
 
 delete {
-  url: {{host}}/users/1
-  body: json
-  auth: none
+  url: {{host}}/users/3
+  body: none
+  auth: bearer
 }
 
-headers {
-  Content-Type: application/json
-  User-Agent: insomnia/11.6.2
+auth:bearer {
+  token: {{token}}
 }
 
 settings {

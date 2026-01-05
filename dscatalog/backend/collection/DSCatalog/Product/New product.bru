@@ -1,11 +1,11 @@
 meta {
-  name: New user
+  name: New product
   type: http
   seq: 3
 }
 
 post {
-  url: {{host}}/users
+  url: {{host}}/products
   body: json
   auth: bearer
 }
@@ -16,19 +16,17 @@ auth:bearer {
 
 body:json {
   {
-    "firstName": "Bob",
-    "lastName": "Brown",
-    "email": "bob@gmail.com",
-    "password": "bob123",
-    "roles": [
+    "description": "The new generation PS5 video game",
+    "name": "PS5 Plus",
+    "imgUrl": "",
+    "price": 4100.0,
+    "categories": [
       {
         "id": 1
-      },
-      {
-        "id": 2
       }
     ]
   }
+  
 }
 
 settings {
