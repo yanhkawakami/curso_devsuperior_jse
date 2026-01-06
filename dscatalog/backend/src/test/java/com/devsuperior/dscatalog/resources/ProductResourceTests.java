@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.resources;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.factory.ProductFactory;
+import com.devsuperior.dscatalog.projections.ProductProjection;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -39,6 +41,7 @@ public class ProductResourceTests {
 
     private PageImpl<ProductDTO> page;
     private ProductDTO productDto;
+    private ProductProjection productProjection;
     private Long existingId;
     private Long nonExistingId;
     private Long dependentId;
@@ -53,7 +56,7 @@ public class ProductResourceTests {
         dependentId = 3L;
         jsonBody = objectMapper.writeValueAsString(productDto);
 
-        Mockito.when(service.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(page);
+        Mockito.when(service.findAll("", "0", ArgumentMatchers.any(Pageable.class))).thenReturn(page);
 
         Mockito.when(service.findById(existingId)).thenReturn(productDto);
         Mockito.when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);

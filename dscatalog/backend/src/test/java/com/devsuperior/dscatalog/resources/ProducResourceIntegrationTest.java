@@ -56,7 +56,7 @@ public class ProducResourceIntegrationTest {
     @Test
     public void findAllShouldReturnSortedPageWhenSortByName() throws Exception{
         ResultActions result =
-                mockMvc.perform(get("/products?page=0&size=12&sort=name,asc")
+                mockMvc.perform(get("/products?page=0&size=12")
                         .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk());

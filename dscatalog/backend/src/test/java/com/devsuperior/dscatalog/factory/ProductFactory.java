@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.factory;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.projections.ProductProjection;
 
 import java.time.Instant;
 
@@ -17,5 +18,18 @@ public class ProductFactory {
 
     public static ProductDTO createProductDTO() {
         return new ProductDTO(createProduct());
+    }
+
+    public static ProductProjection createProductProjection() {
+        return new ProductProjection() {
+            public Long getId() {
+                return 1L;
+            }
+
+            public String getName() {
+                return "Phone";
+            }
+
+        };
     }
 }

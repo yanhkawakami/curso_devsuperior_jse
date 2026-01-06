@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.resources;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.projections.ProductProjection;
 import com.devsuperior.dscatalog.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -21,9 +26,11 @@ public class  ProductResource {
     ProductService service;
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
-        Page<ProductDTO> products = service.findAll(pageable);
-        return ResponseEntity.ok(products);
+    public ResponseEntity<Page<ProductDTO>> findAll(@RequestParam (required = false, defaultValue = "") String name,
+                                                           @RequestParam (required = false, defaultValue = "0") String categoryId,
+                                                           Pageable pageable){
+        Page<ProductDTO> products = service.findAll(name, categoryId, pageable);
+        return ResponseEntity.ok().body(products);
     }
 
     @GetMapping (value = "/{id}")

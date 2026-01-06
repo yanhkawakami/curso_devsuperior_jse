@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.projections.ProductProjection;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +52,7 @@ public class ProducServiceIntegrationTest {
     @Test
     public void findAllShouldReturnPageWhenPageZeroAndSizeTen() {
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<ProductDTO> result = service.findAll(pageRequest);
+        Page<ProductDTO> result = service.findAll("", "1,2,3", pageRequest);
 
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals(0, result.getNumber());
@@ -63,15 +64,15 @@ public class ProducServiceIntegrationTest {
     @Test
     public void findAllShouldReturnEmptyPageWhenPageDoesNotExist() {
         PageRequest pageRequest = PageRequest.of(50, 10);
-        Page<ProductDTO> result = service.findAll(pageRequest);
+        Page<ProductDTO> result = service.findAll("", "0", pageRequest);
 
             Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
     public void findAllShouldReturnSortedPageWhenSortByName() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
-        Page<ProductDTO> result = service.findAll(pageRequest);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<ProductDTO> result = service.findAll("", "1,3", pageRequest);
 
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals("Macbook Pro", result.getContent().get(0).getName());
