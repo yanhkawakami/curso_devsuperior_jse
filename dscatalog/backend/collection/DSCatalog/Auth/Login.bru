@@ -22,12 +22,18 @@ body:form-urlencoded {
 }
 
 script:post-response {
-  if (responseCode.code >= 200 && responseCode.code < 300) {
-      var json = res.getBody();
-      bru.setEnvVar('token', json.access_token);
+  // Pega o corpo da resposta
+  const body = res.getBody();
+  
+  // Verifica se o token existe (ajuste 'access_token' conforme sua API: ex: 'token', 'jwt', etc)
+  if (body && body.access_token) {
+      // Define uma variável de coleção/ambiente chamada 'authToken'
+      bru.setVar("token", body.access_token);
+      
   }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
