@@ -1,0 +1,22 @@
+meta {
+  name: Recover Token
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/auth/recover-token
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "yan.kawakami@outlook.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
