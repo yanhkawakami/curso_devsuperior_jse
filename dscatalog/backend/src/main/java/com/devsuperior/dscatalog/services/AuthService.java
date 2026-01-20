@@ -1,18 +1,25 @@
 package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.dto.EmailDTO;
+import com.devsuperior.dscatalog.dto.NewPasswordDTO;
 import com.devsuperior.dscatalog.entities.PasswordRecover;
 import com.devsuperior.dscatalog.entities.User;
 import com.devsuperior.dscatalog.repositories.PasswordRecoverRepository;
 import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,6 +39,9 @@ public class AuthService {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public void createRecoverToken(EmailDTO body) {
@@ -58,4 +68,31 @@ public class AuthService {
         emailService.sendEmail(body.getEmail(), "Recuperação de Senha - DSCatalog", emailBody);
 
     }
+
+    public void newPassword(@Valid NewPasswordDTO body) {
+        List<PasswordRecover> validToken = repository.searchValidTokens(body.getToken(), Instant.now());
+        if (validToken.isEmpty()) {
+            throw new ResourceNotFoundException("Token inválido ou expirado");
+        }
+
+        User user = userRepository.findByEmail(validToken.get(0).getEmail());
+        if (user == null) {
+            throw new ResourceNotFoundException("Usuário não encontrado para o email: " + validToken.get(0).getEmail());
+        }
+        user.setPassword(passwordEncoder.encode(body.getPassword()));
+        userRepository.save(user);
+    }
+
+    protected User authenticated() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
+            String username = jwtPrincipal.getClaim("username");
+            return userRepository.findByEmail(username);
+        }
+        catch (Exception e) {
+            throw new UsernameNotFoundException("Invalid user");
+        }
+    }
+
 }

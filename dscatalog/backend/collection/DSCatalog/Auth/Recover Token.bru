@@ -4,15 +4,16 @@ meta {
   seq: 2
 }
 
-post {
-  url: {{host}}/auth/recover-token
+put {
+  url: {{host}}/auth/new-password
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "email": "yan.kawakami@outlook.com"
+    "token": "d45cedc1-3114-4742-80ef-2b3a196dfd2,
+    "password": "1234567"
   }
 }
 
