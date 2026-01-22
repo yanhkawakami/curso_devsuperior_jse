@@ -1,0 +1,26 @@
+meta {
+  name: Products
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/products?size=12&page=0&sort=name&name=
+  body: none
+  auth: inherit
+}
+
+params:query {
+  size: 12
+  page: 0
+  sort: name
+  name: 
+}
+
+headers {
+  ~Origin: https://meuapp.netlify.app
+}
+
+settings {
+  encodeUrl: true
+}

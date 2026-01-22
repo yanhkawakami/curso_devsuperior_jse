@@ -1,0 +1,37 @@
+meta {
+  name: New product
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{host}}/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+      "name": "Meu produto",
+      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui ad, adipisci illum ipsam velit et odit eaque reprehenderit ex maxime delectus dolore labore, quisquam quae tempora natus esse aliquam veniam doloremque quam minima culpa alias maiores commodi. Perferendis enim",
+      "imgUrl": "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg",
+      "price": 50.0,
+      "categories": [
+          {
+              "id": 2
+          },
+          {
+              "id": 3
+          }
+      ]
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}
