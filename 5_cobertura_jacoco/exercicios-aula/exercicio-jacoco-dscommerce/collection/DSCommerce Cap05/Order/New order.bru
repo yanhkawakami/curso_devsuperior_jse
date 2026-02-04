@@ -1,0 +1,39 @@
+meta {
+  name: New order
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/orders
+  body: json
+  auth: bearer
+}
+
+headers {
+  ~Origin: http://localhost:3001
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+      "items": [
+          {
+              "productId": 1,
+              "quantity": 2
+          },
+          {
+              "productId": 5,
+              "quantity": 1
+          }
+      ]
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}
