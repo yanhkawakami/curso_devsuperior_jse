@@ -44,7 +44,7 @@ public class CategoryServiceTests {
         List<CategoryDTO> result = service.findAll();
 
         Assertions.assertEquals(1, list.size());
-        Assertions.assertEquals("Games", list.getFirst().getName());
+        Assertions.assertEquals("Games", list.get(0).getName());
     }
 
 
