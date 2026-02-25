@@ -4,6 +4,7 @@ import com.devsuperior.dscommerce.dto.ProductDTO;
 import com.devsuperior.dscommerce.dto.ProductMinDTO;
 import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
+import com.devsuperior.dscommerce.services.exceptions.DatabaseException;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscommerce.tests.ProductFactory;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,6 +37,7 @@ public class ProductServiceTests {
 
     private Long existingId;
     private Long nonExistingId;
+    private Long dependantId;
     private Product product;
     private ProductDTO productDTO;
     private PageImpl<Product> products;
@@ -45,6 +48,7 @@ public class ProductServiceTests {
     void setUp(){
         existingId = 1L;
         nonExistingId = 2L;
+        dependantId = 3L;
         product = ProductFactory.createProduct();
         productDTO = new ProductDTO(product);
         name = "iPhone";
@@ -62,6 +66,12 @@ public class ProductServiceTests {
 
         Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
         Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
+        Mockito.when(repository.existsById(existingId)).thenReturn(true);
+        Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
+        Mockito.when(repository.existsById(dependantId)).thenReturn(true);
+        Mockito.doNothing().when(repository).deleteById(existingId);
+        Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependantId);
     }
 
     @Test
@@ -114,7 +124,25 @@ public class ProductServiceTests {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.update(nonExistingId, productDTO);
         });
+    }
 
+    @Test
+    public void deleteShouldReturnNothingWhenIdExists() {
+        service.delete(existingId);
+    }
+
+    @Test
+    public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.delete(nonExistingId);
+        });
+    }
+
+    @Test
+    public void deleteShouldThrowDatabaseExceptionWhenIdIsDependant() {
+        Assertions.assertThrows(DatabaseException.class, () -> {
+            service.delete(dependantId);
+        });
     }
 
 }
