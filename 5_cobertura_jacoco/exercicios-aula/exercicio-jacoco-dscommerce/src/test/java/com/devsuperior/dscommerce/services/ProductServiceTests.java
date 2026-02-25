@@ -6,6 +6,7 @@ import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscommerce.tests.ProductFactory;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,11 @@ public class ProductServiceTests {
         Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 
         Mockito.when(repository.searchByName(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(products);
+
+        Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+
+        Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
+        Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
     }
 
     @Test
@@ -83,6 +89,32 @@ public class ProductServiceTests {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getSize());
         Assertions.assertEquals(name, result.iterator().next().getName());
+    }
+    
+    @Test
+    public void inserShouldReturnProductDTO() {
+        ProductDTO result = service.insert(productDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(product.getId(), result.getId());
+        Assertions.assertEquals(product.getName(), result.getName());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() {
+        ProductDTO result = service.update(existingId, productDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(product.getId(), result.getId());
+        Assertions.assertEquals(product.getName(), result.getName());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdDoesNotExists() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingId, productDTO);
+        });
+
     }
 
 }
