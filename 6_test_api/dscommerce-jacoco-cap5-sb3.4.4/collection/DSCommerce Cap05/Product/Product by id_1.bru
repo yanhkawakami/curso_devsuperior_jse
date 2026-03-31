@@ -1,0 +1,19 @@
+meta {
+  name: Product by id_1
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{host}}/products/3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+settings {
+  encodeUrl: true
+}
