@@ -1,32 +1,23 @@
 package com.devsuperior.dscommerce.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import com.devsuperior.dscommerce.dto.ProductMinDTO;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import com.devsuperior.dscommerce.dto.ProductDTO;
 import com.devsuperior.dscommerce.entities.Product;
-import com.devsuperior.dscommerce.repositories.ProductRepository;
-import com.devsuperior.dscommerce.services.ProductService;
 import com.devsuperior.dscommerce.tests.ProductFactory;
-import org.junit.jupiter.api.Assertions;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -37,14 +28,21 @@ public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private String productName;
+    private Product product;
+    private ProductDTO productDTO;
+
 
     @BeforeEach
     void setUp (){
         productName = "Macbook";
+        product = ProductFactory.createProduct();
 
+        productDTO = new ProductDTO(product);
     }
-
 
     @Test
     public void findAllShouldReturnPageWhenNameParamIsNotEmpty() throws Exception {
@@ -68,4 +66,116 @@ public class ProductControllerIT {
         result.andExpect(status().isOk());
         result.andExpect(jsonPath(".content[0].id").value(1));
    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnProductDTOCreatedWhenAdminLogged() throws Exception {
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isCreated());
+        result.andExpect(jsonPath("$.name").value("Console PlayStation 5"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndInvalidProducName() throws Exception {
+        product.setName("ab");
+        productDTO = new ProductDTO();
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndInvalidProducDescription() throws Exception {
+        product.setDescription("ab");
+        productDTO = new ProductDTO();
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndNegativeProducPrice() throws Exception {
+        product.setPrice(-1.0);
+        productDTO = new ProductDTO();
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndZeroProducPrice() throws Exception {
+        product.setPrice(0.0);
+        productDTO = new ProductDTO();
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndHasNoProductCategory() throws Exception {
+        product.getCategories().clear();
+        productDTO = new ProductDTO();
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithMockUser(authorities = "ROLE_CLIENT")
+    public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void insertShouldReturnForbiddenWhenUserIsNotLogged() throws Exception {
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDTO))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnauthorized());
+    }
+
 }
